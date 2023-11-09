@@ -205,7 +205,7 @@ export default function ListHorario() {
     setHorarioEdit(horario);
     setIsModalOpen(true);
   };
- 
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
@@ -218,35 +218,35 @@ export default function ListHorario() {
       deleteHorario(horarioId);
     }
   };
-const deleteHorario = (horarioId) => {
-  axios
-    .delete(`http://localhost:8080/deleteHorario/${horarioId}`)
-    .then((response) => {
-      // Realiza acciones adicionales después de la eliminación, si es necesario
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
-const handleEditarHorario = (e) => {
-  e.preventDefault();
-  // Realiza una solicitud al servidor para actualizar el horario con la ID específica (horarioEdit.id_Horario) utilizando los datos en horarioEdit.
-  axios
-    .put(`http://localhost:8080/editHorario/${horarioEdit.id_Horario}`, horarioEdit)
-    .then((response) => {
-      // Actualiza el estado local `horarios` con los datos editados
-      const newHorarios = horarios.map((horario) =>
-        horario.id_Horario === horarioEdit.id_Horario ? horarioEdit : horario
-      );
-      setHorarios(newHorarios);
+  const deleteHorario = (horarioId) => {
+    axios
+      .delete(`http://localhost:8080/deleteHorario/${horarioId}`)
+      .then((response) => {
+        // Realiza acciones adicionales después de la eliminación, si es necesario
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleEditarHorario = (e) => {
+    e.preventDefault();
+    // Realiza una solicitud al servidor para actualizar el horario con la ID específica (horarioEdit.id_Horario) utilizando los datos en horarioEdit.
+    axios
+      .put(`http://localhost:8080/editHorario/${horarioEdit.id_Horario}`, horarioEdit)
+      .then((response) => {
+        // Actualiza el estado local `horarios` con los datos editados
+        const newHorarios = horarios.map((horario) =>
+          horario.id_Horario === horarioEdit.id_Horario ? horarioEdit : horario
+        );
+        setHorarios(newHorarios);
 
-      // Cierra el modal después de guardar los cambios
-      handleCloseModal();
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
+        // Cierra el modal después de guardar los cambios
+        handleCloseModal();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const isMobile = useMediaQuery(breakpoints.xs && breakpoints.sm);
 
   return (
@@ -302,15 +302,15 @@ const handleEditarHorario = (e) => {
       </Grid>
 
       <div style={{
-        display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+        display: 'flex',  justifyContent: 'center', alignItems: 'center',
       }}>
 
         <Grid
           container
           spacing={3}
-          sx={{ background: "#b9f6ca", width: "50%", margin: "0 auto", borderRadius: '10px', mt: "-21.5rem", textAlign: "center", justifyContent: "center" }}
+          sx={{ background: "#b9f6ca", width: "50%", borderRadius: '10px', mt: "-21.5rem", textAlign: "center", justifyContent: "center", maxWidth:"100%" }}
         >
-          <Grid item xs={12} sm={6} sx={{ alignItems: "center", justifyContent: "center", mt: "0 auto" }}>
+          <Grid item xs={12} sm={6} sx={{ alignItems: "center",  mt: "0 auto" , width:"100%"}}>
 
             <FormControl>
               <RadioGroup
@@ -450,26 +450,29 @@ const handleEditarHorario = (e) => {
 
                     mt: "2rem",
                     mb: "4rem",
-                    width: "100%",
                     textAlign: "center",
+                    
                   }}
                   component={Paper}
                 >
                   <ThemeProvider theme={theme}>
-                    <Table sx={{  mb: "2rem", }} aria-label="customized table">
+                    <Table sx={{ mb: "2rem", }} aria-label="customized table">
                       <TableHead>
                         <TableRow>
                           <StyledTableCell>
                             <Typography variant="subtitle1">ID</Typography>
                           </StyledTableCell>
-      
+
                           <StyledTableCell align="right">
                             <Typography variant="subtitle1">Fecha</Typography>
                           </StyledTableCell>
                           <StyledTableCell align="right">
                             <Typography variant="subtitle1">Hora</Typography>
                           </StyledTableCell>
-                          
+                          <StyledTableCell align="center">
+                            <Typography variant="subtitle1">Acciones</Typography>
+                          </StyledTableCell>
+
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -484,9 +487,7 @@ const handleEditarHorario = (e) => {
                             <StyledTableCell align="right">
                               <Typography variant="subtitle1" sx={boldText}>{horario.hora}</Typography >
                             </StyledTableCell>
-                            <StyledTableCell align="right">
-                              <Typography variant="subtitle1" sx={boldText}>{horario.estado_Disponiblidad}</Typography>
-                            </StyledTableCell>
+                            
                             <StyledTableCell align="right" colSpan={2}>
                               <Fab color="primary" aria-label="edit" onClick={() => handleEditClick(horario)}>
                                 <EditIcon />
@@ -533,7 +534,7 @@ const handleEditarHorario = (e) => {
                         })
                       }
                     />
-                    
+
                     <DialogActions>
                       <Button type="submit" color="primary">
                         Guardar Cambios
