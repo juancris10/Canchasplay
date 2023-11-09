@@ -34,6 +34,10 @@ import ListSubheader from '@mui/material/ListSubheader';
 import { styled } from "@mui/material/styles";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import { useAuth0 } from '@auth0/auth0-react';
+
 
 
 const ITEM_HEIGHT = 48;
@@ -76,6 +80,7 @@ const theme = createTheme({
   },
 });
 export default function ListHorario() {
+  const {user} = useAuth0();
   const [datos, setDatos] = useState([]);
   const [selectedCancha, setSelectedCancha] = useState('');
   const [selectedDate, setSelectedDate] = useState(null);
@@ -86,6 +91,8 @@ export default function ListHorario() {
   const [horarios, setHorarios] = useState([]);
   const [horarioEdit, setHorarioEdit] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState('agregar'); // Estado para controlar la opción seleccionada
   const boldText = {
@@ -97,11 +104,16 @@ export default function ListHorario() {
     fontSize: "h6",
     textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)",
   }; */
+
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
   };
+
   useEffect(() => {
-    axios.get('http://localhost:8080/getCancha')
+    const dataToSend ={
+      id_Cuenta : user.sub
+    }
+    axios.post('http://localhost:8080/getCancha',dataToSend)
       .then((response) => {
         setDatos(response.data);
       })
@@ -161,12 +173,17 @@ export default function ListHorario() {
 
       axios.post("http://localhost:8080/createHorario", dataToSend)
         .then((response) => {
+          setShowSuccessAlert(true);
+
           // Manejar la respuesta del servidor
         })
         .catch((error) => {
+          setShowErrorAlert(true);
+
           console.error(error);
         });
     });
+
   };
   const getHorariosByCancha = async (canchaId) => {
     try {
@@ -251,12 +268,31 @@ export default function ListHorario() {
 
   return (
     <div>
-
+      <Box sx={{ textAlign: "center" }}>
+        {showSuccessAlert && (
+          <Alert severity="success" onClose={() => setShowSuccessAlert(false)}>
+            <AlertTitle>Éxito</AlertTitle>
+            ¡La cancha se ha registrado con éxito!
+          </Alert>
+        )}
+        {showErrorAlert && (
+          <Alert severity="error" onClose={() => setShowErrorAlert(false)}>
+            <AlertTitle>Error</AlertTitle>
+            ¡Ocurrió un error al registrar los datos!
+          </Alert>
+        )}
+      </Box>
+  
       <Grid spacing={3} container sx={{
-        backgroundColor: "#b9f6ca", borderRadius: '10px', alignItems: "left", justifyContent: 'left', width: "20%", ml: "1rem", mt: "1rem",
-
+        backgroundColor: "#b9f6ca",
+        borderRadius: '10px',
+        alignItems: "left",
+        justifyContent: 'left',
+        width: "20%",
+        ml: "1rem",
+        mt: "1rem",
       }}>
-
+  
         <Grid item xs={12} sm={6} sx={{ alignItems: "center", justifyContent: "center", }}>
           <FormControl sx={{ m: 1, width: "200%", }}>
             <Typography sx={{ color: "black", fontWeight: "bold", fontSize: "20px", mb: "0.5rem" }} >Elegir cancha</Typography>
@@ -295,22 +331,21 @@ export default function ListHorario() {
                 id="demo-multiple-fecha"
                 value={selectedDate}
                 onChange={handleDateChange}
-              /></LocalizationProvider>
-
+              />
+            </LocalizationProvider>
           </FormControl>
         </Grid>
       </Grid>
-
+  
       <div style={{
         display: 'flex',  justifyContent: 'center', alignItems: 'center',
       }}>
-
         <Grid
           container
           spacing={3}
           sx={{ background: "#b9f6ca", width: "50%", borderRadius: '10px', mt: "-21.5rem", textAlign: "center", justifyContent: "center", maxWidth:"100%" }}
         >
-          <Grid item xs={12} sm={6} sx={{ alignItems: "center",  mt: "0 auto" , width:"100%"}}>
+          <Grid item xs={12} sm={6} sx={{ alignItems: "center", justifyContent: "center", mt: "0 auto" }}>
 
             <FormControl>
               <RadioGroup
@@ -322,15 +357,14 @@ export default function ListHorario() {
               >
                 <FormControlLabel value="agregar" control={<Radio />} label="Agregar" />
                 <FormControlLabel value="listar" control={<Radio />} label="Listar" />
-
               </RadioGroup>
             </FormControl>
             {selectedOption === 'agregar' && (
               <div>
-
                 <Typography
                   sx={{
-                    color: 'black', fontWeight: 'bolder',
+                    color: 'black',
+                    fontWeight: 'bolder',
                     textAlign: "left",
                   }}
                 > Eliga los horarios a añadir
@@ -344,29 +378,21 @@ export default function ListHorario() {
                     />
                   }
                   sx={{
-                    // Aquí puedes agregar estilos personalizados para el label
-                    color: 'black', // Cambia el color del texto
-                    fontWeight: 'bold', // Cambia el grosor de la fuente
-
+                    color: 'black',
+                    fontWeight: 'bold',
                   }}
                 />
                 <Box sx={{
-                  maxHeight: '400px', // Altura máxima del contenedor, ajusta según tus necesidades
-                  overflowY: 'auto', // Habilita el desplazamiento vertical si es necesario
-                  marginBottom: '16px', // Agrega espacio inferior para separar de otros elementos
-                  ...styles.scrollbar, // Aplica los estilos personalizados a la barra de desplazamiento
-
-                  /* "&::-webkit-scrollbar": {
-                    width: "0.4em", // Ancho de la barra
-                    height: "0.4em", // Altura de la barra
-                  }, */
+                  maxHeight: '400px',
+                  overflowY: 'auto',
+                  marginBottom: '16px',
+                  ...styles.scrollbar,
                   "&::-webkit-scrollbar-thumb": {
-                    backgroundColor: "rgba(0, 0, 0, 0.2)", // Color del "pulgar" de la barra
+                    backgroundColor: "rgba(0, 0, 0, 0.2)",
                   },
                   "&::-webkit-scrollbar-track": {
-                    background: "transparent", // Color del fondo de la barra
+                    background: "transparent",
                   },
-
                 }}>
                   {turno === 'manana'
                     ? [...Array(6)].map((_, index) => (
@@ -384,7 +410,7 @@ export default function ListHorario() {
                         }}
                       >
                         <Typography sx={{ flex: 1, textAlign: 'left', marginRight: '8px', fontWeight: "bolder" }}>
-                          {`${String((index + 8) % 24).padStart(2, '0')}:00`} {/* Usa el mismo formato que selectedHours */}
+                          {`${String((index + 8) % 24).padStart(2, '0')}:00`}
                         </Typography>
                         <Checkbox
                           checked={selectedHours.includes(`${String((index + 8) % 24).padStart(2, '0')}:00:00`)}
@@ -409,12 +435,13 @@ export default function ListHorario() {
                           padding: '8px',
                           marginBottom: '8px',
                           fontWeight: 'bold',
-
                         }}
                       >
                         <Typography sx={{
-                          flex: 1, textAlign: 'left', marginRight: '8px', fontWeight: 'bolder',
-                          // Cambia el tamaño de fuente
+                          flex: 1,
+                          textAlign: 'left',
+                          marginRight: '8px',
+                          fontWeight: 'bolder',
                         }}>
                           {`${String((index + 16) % 24).padStart(2, '0')}:00`}
                         </Typography>
@@ -425,7 +452,6 @@ export default function ListHorario() {
                             '&.Mui-checked': {
                               color: 'blue',
                             },
-
                           }}
                         />
                       </Box>
@@ -447,11 +473,11 @@ export default function ListHorario() {
               <div>
                 <TableContainer
                   sx={{
-
+                    maxHeight: '400px',
+                    ml: "-8rem",
                     mt: "2rem",
                     mb: "4rem",
                     textAlign: "center",
-                    
                   }}
                   component={Paper}
                 >
@@ -462,24 +488,21 @@ export default function ListHorario() {
                           <StyledTableCell>
                             <Typography variant="subtitle1">ID</Typography>
                           </StyledTableCell>
-
+      
                           <StyledTableCell align="right">
                             <Typography variant="subtitle1">Fecha</Typography>
                           </StyledTableCell>
                           <StyledTableCell align="right">
                             <Typography variant="subtitle1">Hora</Typography>
                           </StyledTableCell>
-                          <StyledTableCell align="center">
-                            <Typography variant="subtitle1">Acciones</Typography>
-                          </StyledTableCell>
-
+                          
                         </TableRow>
                       </TableHead>
                       <TableBody>
                         {horarios.map((horario) => (
                           <StyledTableRow key={horario.id_Horario} >
                             <StyledTableCell component="th" scope="row">
-                              {horario.id_Cancha}
+                              {horario.id_Horario}
                             </StyledTableCell>
                             <StyledTableCell align="right">
                               <Typography variant="subtitle1" sx={boldText}>{horario.fecha}</Typography >
@@ -487,7 +510,9 @@ export default function ListHorario() {
                             <StyledTableCell align="right">
                               <Typography variant="subtitle1" sx={boldText}>{horario.hora}</Typography >
                             </StyledTableCell>
-                            
+                            <StyledTableCell align="right">
+                              <Typography variant="subtitle1" sx={boldText}>{horario.estado_Disponiblidad}</Typography>
+                            </StyledTableCell>
                             <StyledTableCell align="right" colSpan={2}>
                               <Fab color="primary" aria-label="edit" onClick={() => handleEditClick(horario)}>
                                 <EditIcon />
@@ -503,7 +528,6 @@ export default function ListHorario() {
                   </ThemeProvider>
                 </TableContainer>
               </div>
-
             )}
             <Dialog open={isModalOpen} onClose={handleCloseModal}>
               <DialogTitle>Editar Cancha</DialogTitle>
@@ -534,7 +558,7 @@ export default function ListHorario() {
                         })
                       }
                     />
-
+                    
                     <DialogActions>
                       <Button type="submit" color="primary">
                         Guardar Cambios
@@ -547,16 +571,10 @@ export default function ListHorario() {
                 )}
               </DialogContent>
             </Dialog>
-
-
           </Grid>
-
         </Grid>
-
-
-      </div >
-    </div >
-
+      </div>
+    </div>
   );
 }
 
