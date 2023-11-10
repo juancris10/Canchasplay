@@ -338,14 +338,15 @@ export default function ListHorario() {
       </Grid>
   
       <div style={{
-        display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+        display: 'flex',  justifyContent: 'center', alignItems: 'center',
       }}>
         <Grid
           container
           spacing={3}
-          sx={{ background: "#b9f6ca", width: "50%", margin: "0 auto", borderRadius: '10px', mt: "-21.5rem", textAlign: "center", justifyContent: "center" }}
+          sx={{ background: "#b9f6ca", width: "50%", borderRadius: '10px', mt: "-21.5rem", textAlign: "center", justifyContent: "center", maxWidth:"100%" }}
         >
           <Grid item xs={12} sm={6} sx={{ alignItems: "center", justifyContent: "center", mt: "0 auto" }}>
+
             <FormControl>
               <RadioGroup
                 row
@@ -477,7 +478,6 @@ export default function ListHorario() {
                     mt: "2rem",
                     mb: "4rem",
                     textAlign: "center",
-                    width: "180%"
                   }}
                   component={Paper}
                 >
@@ -488,15 +488,14 @@ export default function ListHorario() {
                           <StyledTableCell>
                             <Typography variant="subtitle1">ID</Typography>
                           </StyledTableCell>
+      
                           <StyledTableCell align="right">
                             <Typography variant="subtitle1">Fecha</Typography>
                           </StyledTableCell>
                           <StyledTableCell align="right">
                             <Typography variant="subtitle1">Hora</Typography>
                           </StyledTableCell>
-                          <StyledTableCell align="right">
-                            <Typography variant="subtitle1">Acciones</Typography>
-                          </StyledTableCell>
+                          
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -510,6 +509,9 @@ export default function ListHorario() {
                             </StyledTableCell>
                             <StyledTableCell align="right">
                               <Typography variant="subtitle1" sx={boldText}>{horario.hora}</Typography >
+                            </StyledTableCell>
+                            <StyledTableCell align="right">
+                              <Typography variant="subtitle1" sx={boldText}>{horario.estado_Disponiblidad}</Typography>
                             </StyledTableCell>
                             <StyledTableCell align="right" colSpan={2}>
                               <Fab color="primary" aria-label="edit" onClick={() => handleEditClick(horario)}>
@@ -556,6 +558,7 @@ export default function ListHorario() {
                         })
                       }
                     />
+                    
                     <DialogActions>
                       <Button type="submit" color="primary">
                         Guardar Cambios
