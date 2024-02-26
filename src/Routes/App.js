@@ -24,7 +24,7 @@ export default function App(){
         <>
             <BrowserRouter>
                 <Routes>
-                    <Route exact path="/login" element={<Login />}></Route>
+                    <Route exact path="/Login" element={<Login />}></Route>
                     <Route exact path="/Verificacion" element={<ProtectedRoute><Verificacion /></ProtectedRoute>} />
                     {/*Mishi*/}
                     <Route exact path="/HomeUsuario" element={<ProtectedRoute><NavigationContext><HomeUsuario/></NavigationContext></ProtectedRoute>}></Route>
@@ -32,7 +32,7 @@ export default function App(){
                     <Route exact path="/HomePropietario" element={<ProtectedRoute><VistaPropietario/></ProtectedRoute>}></Route>
                     <Route exact path="/Complejo" element={<ProtectedRoute><AddComplejo/></ProtectedRoute>}></Route>
                     {/* Marto */}
-                    <Route exact path="/HomePage" element={<HomePage />} />
+                    <Route exact path="/" element={<HomePage />} />
                     <Route exact path="/RegistroPropietario" element={<FormProp />} />
                     <Route path="/*" element={<NotFound />} />
                     <Route path="/AdminPage" element={<AdminPage />} />

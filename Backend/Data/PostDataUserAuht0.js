@@ -1,11 +1,11 @@
 const mysql = require("mysql");
 
 const db = mysql.createConnection({
-  host: "localhost",
   port: 3306,
-  user: "root",
-  password: "",
-  database: "canchasplay",
+  host: '34.176.165.104',
+  user: 'canchasplay12',
+  password: 'canchasplay12',
+  database: 'canchasplay',
 });
 
  
@@ -20,8 +20,8 @@ const postDataUser = (req,res) => {
   const rol = userMetadata.rol;
 
   console.log(req.body);
-  const dataPersona = "INSERT INTO Persona (dni, nombre, apellido, num_telefono) VALUES (?, ?, ?, ?)";
-  const dataCuenta = "INSERT INTO Cuenta (id_Cuenta, email, Persona_dni,Rol) VALUES (?, ?, ?, ?)";
+  const dataPersona = "INSERT INTO persona (dni, nombre, apellido, num_telefono) VALUES (?, ?, ?, ?)";
+  const dataCuenta = "INSERT INTO cuenta (id_Cuenta, email, Persona_dni,Rol) VALUES (?, ?, ?, ?)";
   const dataCliente = "INSERT INTO cliente (Cuenta_id_Cuenta) VALUES (?)";
   const dataPropietario = "INSERT INTO  propietario  (Cuenta_id_Cuenta,Verificado) VALUES (?, ?)";
   // Primero, inserta el registro en la tabla Persona

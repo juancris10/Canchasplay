@@ -34,7 +34,7 @@ export default function AccordionCanchas({open,onClose,NombreCancha,idComplejo})
     const dataToSend = {
       idCancha: idCan
     };
-    axios.post("http://localhost:8080/getDataHorarios",dataToSend)
+    axios.post("https://canchas-play.onrender.com/getDataHorarios",dataToSend)
       .then((response ) => {
         setDatosHorarios(response.data);
       })
@@ -52,7 +52,7 @@ export default function AccordionCanchas({open,onClose,NombreCancha,idComplejo})
 
   useEffect(() => {
     setLocalOpen(open);
-    axios.post("http://localhost:8080/getDataCanchas",dataToSend)
+    axios.post("https://canchas-play.onrender.com/getDataCanchas",dataToSend)
       .then((response ) => {
         setDatosCanchas(response.data);
       })
